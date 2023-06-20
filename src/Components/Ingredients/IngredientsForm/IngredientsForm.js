@@ -1,15 +1,17 @@
 import Card from "../../UI/Card/Card";
+import classnames from "classnames";
+import classes from "./IngredientsForm.module.css";
 
 const IngredientsForm = () => {
   return (
-    <section>
+    <section className={classnames(classes["form-section"])}>
       <Card>
-        <form>
-          <div>
+        <form className={classnames(classes.form)}>
+          <div className={classnames(classes["form-input"])}>
             <label htmlFor="tile">Name</label>
             <input type="text" id="title" />
           </div>
-          <div>
+          <div className={classnames(classes["form-input"])}>
             <label htmlFor="amount">Amount</label>
             <input type="number" id="amount" />
           </div>

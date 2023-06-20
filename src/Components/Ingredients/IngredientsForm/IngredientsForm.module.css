@@ -1,0 +1,29 @@
+.form-section{
+    margin-top: 1.5rem;
+    padding: 0 0.625rem 1.25rem 0.625rem;
+    width: 30rem;
+}
+
+.form input{
+    border: none;
+    border-bottom: 2px solid #a2a0a0;
+    outline: none;
+}
+
+.form-input{
+    display: flex;
+    flex-direction: column;
+}
+
+.form div input{
+    margin-bottom: 0.625rem;
+}
+
+.form div button{
+    margin-top: 0.625rem;
+    color: white;
+    background-color: #ff2058;
+    border: none;
+    padding: 0.625rem 2rem;
+    border-radius: 4px;
+}
