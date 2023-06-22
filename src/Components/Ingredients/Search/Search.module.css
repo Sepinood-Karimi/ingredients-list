@@ -9,3 +9,7 @@
     outline: none;
     height: 1.5rem;
 }
+
+.search-form input:focus{
+    border-color: #ff2058;
+}

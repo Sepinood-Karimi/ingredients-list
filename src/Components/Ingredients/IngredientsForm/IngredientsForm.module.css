@@ -10,14 +10,17 @@
     outline: none;
 }
 
+
 .form-input{
     display: flex;
     flex-direction: column;
-}
-
-.form div input{
     margin-bottom: 0.625rem;
 }
+
+.form input:focus{
+    border-bottom-color: #ff2058;
+}
+
 
 .form div button{
     margin-top: 0.625rem;
