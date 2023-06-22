@@ -24,11 +24,15 @@ const Ingredients = () => {
   }, []);
   const addIngredientsHandler = (newIngredient) => {
     insertIngredient(newIngredient).then((response) => {
-      console.log(response);
+      const responseData = response.data;
+      let newId = "";
+      for (const r in responseData) {
+        newId = responseData[r].id;
+      }
       setIngredients((prevIngredients) => [
         ...prevIngredients,
         {
-          id: Math.random().toString(),
+          id: newId,
           title: newIngredient.title,
           amount: newIngredient.amount,
         },
