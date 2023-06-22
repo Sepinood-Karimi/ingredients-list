@@ -4,6 +4,7 @@ import IngredientsList from "../IngredientsList/IngredientsList";
 import { useCallback, useEffect, useState } from "react";
 import insertIngredient from "../../../Api/insertIngredient";
 import getIngredients from "../../../Api/getIngredients";
+import removeIngredient from "../../../Api/removeIngredient";
 
 const Ingredients = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -44,13 +45,24 @@ const Ingredients = () => {
     setIngredients(enteredFilter);
   }, []);
 
+  const removeIngredientHandler = (id) => {
+    removeIngredient(id).then((response) => {
+      setIngredients((prevIngredients) => {
+        prevIngredients.filter((ingredient) => ingredient.id !== id);
+      });
+    });
+  };
+
   return (
     <div>
       <IngredientsForm onAddIngredient={addIngredientsHandler} />
       <section>
         <Search onLoadIngredients={loadIngredientsHandler} />
       </section>
-      <IngredientsList ingredients={ingredients} />
+      <IngredientsList
+        ingredients={ingredients}
+        onDelete={removeIngredientHandler}
+      />
     </div>
   );
 };
