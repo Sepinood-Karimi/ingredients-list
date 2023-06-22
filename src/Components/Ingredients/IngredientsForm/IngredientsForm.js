@@ -1,8 +1,9 @@
+import React from "react";
 import Card from "../../UI/Card/Card";
 import classnames from "classnames";
 import classes from "./IngredientsForm.module.css";
 
-const IngredientsForm = () => {
+const IngredientsForm = React.memo(() => {
   return (
     <section className={classnames(classes["form-section"])}>
       <Card>
@@ -22,6 +23,6 @@ const IngredientsForm = () => {
       </Card>
     </section>
   );
-};
+});
 
 export default IngredientsForm;
