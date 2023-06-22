@@ -1,7 +1,7 @@
 import IngredientsForm from "../IngredientsForm/IngredientsForm";
 import Search from "../Search/Search";
 import IngredientsList from "../IngredientsList/IngredientsList";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import insertIngredient from "../../../Api/insertIngredient";
 import getIngredients from "../../../Api/getIngredients";
 
@@ -39,11 +39,16 @@ const Ingredients = () => {
       ]);
     });
   };
+
+  const loadIngredientsHandler = useCallback((enteredFilter) => {
+    setIngredients(enteredFilter);
+  }, []);
+
   return (
     <div>
       <IngredientsForm onAddIngredient={addIngredientsHandler} />
       <section>
-        <Search />
+        <Search onLoadIngredients={loadIngredientsHandler} />
       </section>
       <IngredientsList ingredients={ingredients} />
     </div>
