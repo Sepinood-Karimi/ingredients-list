@@ -6,15 +6,15 @@ const IngredientsList = (props) => {
   return (
     <section className={classnames(classes["ingredients-list"])}>
       <h2> Loaded Ingredients</h2>
-      <ul>
+      <div>
         {props.ingredients.map((ingredient) => (
-          <li key={ingredient.id}>
+          <div key={ingredient.id}>
             <span> {ingredient.title}</span>
             <span> {ingredient.amount} x </span>
             <TrashcanLogo onClick={props.onDelete.bind(this, ingredient.id)} />
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
   );
 };
