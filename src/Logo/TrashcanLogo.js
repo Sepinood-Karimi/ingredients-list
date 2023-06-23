@@ -7,6 +7,7 @@ const TrashcanLogo = (props) => {
       strokeWidth={1.5}
       stroke="currentColor"
       width="15px"
+      color="#ff2058"
       onClick={props.onClick}
     >
       <path

@@ -21,6 +21,11 @@
     border-bottom-color: #ff2058;
 }
 
+.actions{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
 
 .form div button{
     margin-top: 0.625rem;
@@ -29,4 +34,5 @@
     border: none;
     padding: 0.625rem 2rem;
     border-radius: 4px;
+    margin-right: 200px;
 }

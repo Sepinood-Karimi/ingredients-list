@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Card from "../../UI/Card/Card";
 import classnames from "classnames";
 import classes from "./IngredientsForm.module.css";
+import Loading from "../../UI/LoadingIndicator/Loading";
 
 const IngredientsForm = React.memo((props) => {
   const [enteredTitle, setEnteredTitle] = useState("");
@@ -40,8 +41,9 @@ const IngredientsForm = React.memo((props) => {
               onChange={amountChangeHandler}
             />
           </div>
-          <div>
+          <div className={classnames(classes.actions)}>
             <button type="submit">Add Ingredient</button>
+            {props.isLoading && <Loading />}
           </div>
         </form>
       </Card>
