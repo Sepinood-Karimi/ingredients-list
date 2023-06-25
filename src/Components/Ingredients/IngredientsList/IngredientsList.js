@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import classes from "./IngredientsList.module.css";
-import TrashcanLogo from "../../../Logo/TrashcanLogo";
+import TrashcanLogo from "../../UI/Logo/TrashcanLogo";
 
 const IngredientsList = (props) => {
   return (
