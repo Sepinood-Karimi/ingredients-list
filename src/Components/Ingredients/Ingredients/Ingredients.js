@@ -7,14 +7,14 @@ import getIngredients from "../../../Api/getIngredients";
 import removeIngredient from "../../../Api/removeIngredient";
 import ErrorModal from "../../UI/ErrorModal/ErrorModal";
 
-const ingredientsReducer = (currentIngredients, action) => {
+const ingredientsReducer = (currentIngredientsState, action) => {
   switch (action.type) {
     case "SET":
       return action.ingredients;
     case "ADD":
-      return [...currentIngredients, action.newIngredient];
+      return [...currentIngredientsState, action.newIngredient];
     case "REMOVE":
-      return currentIngredients.filter(
+      return currentIngredientsState.filter(
         (ingredient) => ingredient.id !== action.id
       );
     default:
