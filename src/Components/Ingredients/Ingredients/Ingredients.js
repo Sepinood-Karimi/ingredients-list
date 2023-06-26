@@ -1,16 +1,31 @@
 import IngredientsForm from "../IngredientsForm/IngredientsForm";
 import Search from "../Search/Search";
 import IngredientsList from "../IngredientsList/IngredientsList";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import insertIngredient from "../../../Api/insertIngredient";
 import getIngredients from "../../../Api/getIngredients";
 import removeIngredient from "../../../Api/removeIngredient";
 import ErrorModal from "../../UI/ErrorModal/ErrorModal";
 
+const ingredientsReducer = (currentIngredients, action) => {
+  switch (action.type) {
+    case "SET":
+      return action.ingredients;
+    case "ADD":
+      return [...currentIngredients, action.newIngredient];
+    case "REMOVE":
+      return currentIngredients.filter(
+        (ingredient) => ingredient.id !== action.id
+      );
+    default:
+      throw new Error("we should not be here!");
+  }
+};
 const Ingredients = () => {
-  const [ingredients, setIngredients] = useState([]);
+  // const [ingredients, setIngredients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [ingredients, dispatchIngredients] = useReducer(ingredientsReducer, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -24,7 +39,8 @@ const Ingredients = () => {
             title: responseData[r].title,
             amount: responseData[r].amount,
           });
-          setIngredients(loadedIngredients);
+          // setIngredients(loadedIngredients);
+          dispatchIngredients({ type: "SET", ingredients: loadedIngredients });
         }
       } else {
         setError(response.error);
@@ -41,14 +57,22 @@ const Ingredients = () => {
         for (const r in responseData) {
           newId = responseData[r].id;
         }
-        setIngredients((prevIngredients) => [
-          ...prevIngredients,
-          {
+        // setIngredients((prevIngredients) => [
+        //   ...prevIngredients,
+        //   {
+        //     id: newId,
+        //     title: newIngredient.title,
+        //     amount: newIngredient.amount,
+        //   },
+        // ]);
+        dispatchIngredients({
+          type: "ADD",
+          newIngredient: {
             id: newId,
             title: newIngredient.title,
             amount: newIngredient.amount,
           },
-        ]);
+        });
       } else {
         setError(response.error);
       }
@@ -57,16 +81,18 @@ const Ingredients = () => {
   };
 
   const loadIngredientsHandler = useCallback((enteredFilter) => {
-    setIngredients(enteredFilter);
+    // setIngredients(enteredFilter);
+    dispatchIngredients({ type: "SET", ingredients: enteredFilter });
   }, []);
 
   const removeIngredientHandler = (id) => {
     setIsLoading(true);
     removeIngredient(id).then((response) => {
       if (response.error === null) {
-        setIngredients((prevIngredients) => {
-          return prevIngredients.filter((ingredient) => ingredient.id !== id);
-        });
+        // setIngredients((prevIngredients) => {
+        //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
+        // });
+        dispatchIngredients({ type: "REMOVE", id: id });
         setIsLoading(false);
       } else {
         setError(response.error);
