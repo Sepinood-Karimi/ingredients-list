@@ -74,6 +74,10 @@ const Ingredients = () => {
     });
   };
 
+  const closeErrorModalHandler = () => {
+    setError(null);
+  };
+
   return (
     <div>
       <IngredientsForm
@@ -87,7 +91,9 @@ const Ingredients = () => {
         ingredients={ingredients}
         onDelete={removeIngredientHandler}
       />
-      {!error && <ErrorModal error={error} />}
+      {error && (
+        <ErrorModal error={error} onCloseErrorModal={closeErrorModalHandler} />
+      )}
     </div>
   );
 };
