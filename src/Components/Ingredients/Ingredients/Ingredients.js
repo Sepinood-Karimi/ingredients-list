@@ -21,14 +21,34 @@ const ingredientsReducer = (currentIngredientsState, action) => {
       throw new Error("we should not be here!");
   }
 };
+
+const httpReducer = (currentHttpState, action) => {
+  switch (action.type) {
+    case "SEND_REQUEST":
+      return { ...currentHttpState, loading: true };
+    case "SUCCESS_RESPONSE":
+      return { ...currentHttpState, loading: false };
+    case "ERROR_RESPONSE":
+      return { loading: false, error: action.errorMessage };
+    case "CLEAR":
+      return { loading: false, error: null };
+    default:
+      throw new Error("we should not reach here!");
+  }
+};
 const Ingredients = () => {
   // const [ingredients, setIngredients] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState(null);
   const [ingredients, dispatchIngredients] = useReducer(ingredientsReducer, []);
+  const [httpState, dispatchHttpState] = useReducer(httpReducer, {
+    loading: false,
+    error: null,
+  });
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    dispatchHttpState({ type: "SEND_REQUEST" });
     getIngredients().then((response) => {
       if (response.error === null) {
         const responseData = response.data;
@@ -42,16 +62,21 @@ const Ingredients = () => {
           // setIngredients(loadedIngredients);
           dispatchIngredients({ type: "SET", ingredients: loadedIngredients });
         }
+        dispatchHttpState({ type: "SUCCESS_RESPONSE" });
       } else {
-        setError(response.error);
+        // setError(response.error);
+        dispatchHttpState({
+          type: "ERROR_RESPONSE",
+          errorMessage: response.error.message,
+        });
       }
-      setIsLoading(false);
     });
   }, []);
   const addIngredientsHandler = (newIngredient) => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    dispatchHttpState({ type: "SEND_REQUEST" });
     insertIngredient(newIngredient).then((response) => {
-      if (response.error === null) {
+      if (response.error.message === null) {
         const responseData = response.data;
         let newId = "";
         for (const r in responseData) {
@@ -73,10 +98,15 @@ const Ingredients = () => {
             amount: newIngredient.amount,
           },
         });
+        dispatchHttpState({ type: "SUCCESS_RESPONSE" });
       } else {
-        setError(response.error);
+        // setError(response.error.message);
+        dispatchHttpState({
+          type: "ERROR_RESPONSE",
+          errorMessage: response.error.message,
+        });
       }
-      setIsLoading(false);
+      // setIsLoading(false);
     });
   };
 
@@ -86,29 +116,35 @@ const Ingredients = () => {
   }, []);
 
   const removeIngredientHandler = (id) => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    dispatchHttpState({ type: "SEND_REQUEST" });
     removeIngredient(id).then((response) => {
-      if (response.error === null) {
+      if (response.error.message === null) {
         // setIngredients((prevIngredients) => {
         //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
         // });
         dispatchIngredients({ type: "REMOVE", id: id });
-        setIsLoading(false);
+        // setIsLoading(false);
+        dispatchHttpState({ type: "SUCCESS_RESPONSE" });
       } else {
-        setError(response.error);
+        // setError(response.error.message);
+        dispatchHttpState({
+          type: "ERROR_RESPONSE",
+          errorMessage: response.error.message,
+        });
       }
     });
   };
 
   const closeErrorModalHandler = () => {
-    setError(null);
+    dispatchHttpState({ type: "CLEAR" });
   };
 
   return (
     <div>
       <IngredientsForm
         onAddIngredient={addIngredientsHandler}
-        isLoading={isLoading}
+        isLoading={httpState.loading}
       />
       <section>
         <Search onLoadIngredients={loadIngredientsHandler} />
@@ -117,8 +153,11 @@ const Ingredients = () => {
         ingredients={ingredients}
         onDelete={removeIngredientHandler}
       />
-      {error && (
-        <ErrorModal error={error} onCloseErrorModal={closeErrorModalHandler} />
+      {httpState.error && (
+        <ErrorModal
+          error={httpState.error}
+          onCloseErrorModal={closeErrorModalHandler}
+        />
       )}
     </div>
   );
