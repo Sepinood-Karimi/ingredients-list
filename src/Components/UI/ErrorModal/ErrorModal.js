@@ -13,7 +13,7 @@ const ErrorModal = (props) => {
     >
       <div>
         <h3>An Error Occurred!</h3>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <p>{props.error}</p>
         <button onClick={closeModalHandler}> okay </button>
       </div>
     </Modal>
