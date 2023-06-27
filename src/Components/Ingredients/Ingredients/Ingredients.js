@@ -1,7 +1,7 @@
 import IngredientsForm from "../IngredientsForm/IngredientsForm";
 import Search from "../Search/Search";
 import IngredientsList from "../IngredientsList/IngredientsList";
-import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
 import insertIngredient from "../../../Api/insertIngredient";
 import getIngredients from "../../../Api/getIngredients";
 import removeIngredient from "../../../Api/removeIngredient";
@@ -37,9 +37,6 @@ const httpReducer = (currentHttpState, action) => {
   }
 };
 const Ingredients = () => {
-  // const [ingredients, setIngredients] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(null);
   const [ingredients, dispatchIngredients] = useReducer(ingredientsReducer, []);
   const [httpState, dispatchHttpState] = useReducer(httpReducer, {
     loading: false,
@@ -47,7 +44,6 @@ const Ingredients = () => {
   });
 
   useEffect(() => {
-    // setIsLoading(true);
     dispatchHttpState({ type: "SEND_REQUEST" });
     getIngredients().then((response) => {
       if (response.error === null) {
@@ -59,12 +55,10 @@ const Ingredients = () => {
             title: responseData[r].title,
             amount: responseData[r].amount,
           });
-          // setIngredients(loadedIngredients);
           dispatchIngredients({ type: "SET", ingredients: loadedIngredients });
         }
         dispatchHttpState({ type: "SUCCESS_RESPONSE" });
       } else {
-        // setError(response.error);
         dispatchHttpState({
           type: "ERROR_RESPONSE",
           errorMessage: response.error.message,
@@ -73,7 +67,6 @@ const Ingredients = () => {
     });
   }, []);
   const addIngredientsHandler = (newIngredient) => {
-    // setIsLoading(true);
     dispatchHttpState({ type: "SEND_REQUEST" });
     insertIngredient(newIngredient).then((response) => {
       if (response.error === null) {
@@ -82,14 +75,6 @@ const Ingredients = () => {
         for (const r in responseData) {
           newId = responseData[r].id;
         }
-        // setIngredients((prevIngredients) => [
-        //   ...prevIngredients,
-        //   {
-        //     id: newId,
-        //     title: newIngredient.title,
-        //     amount: newIngredient.amount,
-        //   },
-        // ]);
         dispatchIngredients({
           type: "ADD",
           newIngredient: {
@@ -100,34 +85,25 @@ const Ingredients = () => {
         });
         dispatchHttpState({ type: "SUCCESS_RESPONSE" });
       } else {
-        // setError(response.error.message);
         dispatchHttpState({
           type: "ERROR_RESPONSE",
           errorMessage: response.error.message,
         });
       }
-      // setIsLoading(false);
     });
   };
 
   const loadIngredientsHandler = useCallback((enteredFilter) => {
-    // setIngredients(enteredFilter);
     dispatchIngredients({ type: "SET", ingredients: enteredFilter });
   }, []);
 
   const removeIngredientHandler = useCallback((id) => {
-    // setIsLoading(true);
     dispatchHttpState({ type: "SEND_REQUEST" });
     removeIngredient(id).then((response) => {
       if (response.error === null) {
-        // setIngredients((prevIngredients) => {
-        //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
-        // });
         dispatchIngredients({ type: "REMOVE", id: id });
-        // setIsLoading(false);
         dispatchHttpState({ type: "SUCCESS_RESPONSE" });
       } else {
-        // setError(response.error.message);
         dispatchHttpState({
           type: "ERROR_RESPONSE",
           errorMessage: response.error.message,
