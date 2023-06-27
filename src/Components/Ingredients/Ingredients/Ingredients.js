@@ -1,7 +1,7 @@
 import IngredientsForm from "../IngredientsForm/IngredientsForm";
 import Search from "../Search/Search";
 import IngredientsList from "../IngredientsList/IngredientsList";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import insertIngredient from "../../../Api/insertIngredient";
 import getIngredients from "../../../Api/getIngredients";
 import removeIngredient from "../../../Api/removeIngredient";
@@ -76,7 +76,7 @@ const Ingredients = () => {
     // setIsLoading(true);
     dispatchHttpState({ type: "SEND_REQUEST" });
     insertIngredient(newIngredient).then((response) => {
-      if (response.error.message === null) {
+      if (response.error === null) {
         const responseData = response.data;
         let newId = "";
         for (const r in responseData) {
@@ -115,11 +115,11 @@ const Ingredients = () => {
     dispatchIngredients({ type: "SET", ingredients: enteredFilter });
   }, []);
 
-  const removeIngredientHandler = (id) => {
+  const removeIngredientHandler = useCallback((id) => {
     // setIsLoading(true);
     dispatchHttpState({ type: "SEND_REQUEST" });
     removeIngredient(id).then((response) => {
-      if (response.error.message === null) {
+      if (response.error === null) {
         // setIngredients((prevIngredients) => {
         //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
         // });
@@ -134,11 +134,20 @@ const Ingredients = () => {
         });
       }
     });
-  };
+  }, []);
 
   const closeErrorModalHandler = () => {
     dispatchHttpState({ type: "CLEAR" });
   };
+
+  const ingredientsList = useMemo(() => {
+    return (
+      <IngredientsList
+        ingredients={ingredients}
+        onDelete={removeIngredientHandler}
+      />
+    );
+  }, [ingredients, removeIngredientHandler]);
 
   return (
     <div>
@@ -149,10 +158,7 @@ const Ingredients = () => {
       <section>
         <Search onLoadIngredients={loadIngredientsHandler} />
       </section>
-      <IngredientsList
-        ingredients={ingredients}
-        onDelete={removeIngredientHandler}
-      />
+      {ingredientsList}
       {httpState.error && (
         <ErrorModal
           error={httpState.error}
